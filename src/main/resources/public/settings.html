@@ -1,0 +1,397 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#080b14">
+    <meta name="description" content="XYRO AI Robot engine and model settings">
+
+    <title>Settings | XYRO AI Robot</title>
+
+    <link rel="stylesheet" href="/css/settings.css">
+    <script src="/js/settings.js" defer></script>
+</head>
+
+<body>
+    <div class="page-container">
+
+        <header class="topbar">
+            <a class="brand" href="/" aria-label="Return to XYRO home">
+                <span class="brand-icon">X</span>
+                <span class="brand-text">
+                    <strong>XYRO</strong>
+                    <small>AI ROBOT</small>
+                </span>
+            </a>
+
+            <a href="/" class="back-button">
+                <span aria-hidden="true">←</span>
+                Back to XYRO
+            </a>
+        </header>
+
+        <main>
+            <section class="page-heading">
+                <div class="eyebrow">
+                    <span class="status-dot"></span>
+                    SYSTEM CONFIGURATION
+                </div>
+
+                <h1>XYRO <span>Settings</span></h1>
+
+                <p>
+                    Configure the language model, speech recognition,
+                    inference parameters, and settings protection.
+                </p>
+            </section>
+
+            <form id="settings-form">
+
+                <!-- AI engine selection -->
+                <section class="settings-card">
+                    <div class="section-heading">
+                        <div class="section-icon">⚙</div>
+                        <div>
+                            <h2>AI Engine Configuration</h2>
+                            <p>Choose how XYRO connects to its language model.</p>
+                        </div>
+                    </div>
+
+                    <div class="field-label">Select Mode</div>
+
+                    <div class="engine-options">
+                        <label class="engine-option selected" for="server-engine">
+                            <input
+                                type="radio"
+                                id="server-engine"
+                                name="engineType"
+                                value="server"
+                                checked
+                            >
+                            <span class="custom-radio"></span>
+
+                            <span class="engine-option-content">
+                                <strong>1. llama.cpp Server / Ollama</strong>
+                                <small>
+                                    Connect to a model running on a server.
+                                    Example: qwen2.5:1.5b
+                                </small>
+                            </span>
+
+                            <span class="option-tag">SERVER</span>
+                        </label>
+
+                        <label class="engine-option" for="local-engine">
+                            <input
+                                type="radio"
+                                id="local-engine"
+                                name="engineType"
+                                value="local"
+                            >
+                            <span class="custom-radio"></span>
+
+                            <span class="engine-option-content">
+                                <strong>2. Local On-Device llama.cpp</strong>
+                                <small>
+                                    Load a GGUF model file directly on the device.
+                                </small>
+                            </span>
+
+                            <span class="option-tag">LOCAL</span>
+                        </label>
+                    </div>
+
+                    <div id="server-fields" class="engine-fields">
+                        <div class="field-group">
+                            <label for="server-url">Server URL</label>
+                            <input
+                                type="url"
+                                id="server-url"
+                                name="serverUrl"
+                                placeholder="http://192.168.1.X:8080"
+                                value="http://10.0.2.2:8080"
+                            >
+                            <small class="field-help">
+                                Address of the machine running the model server.
+                            </small>
+                        </div>
+
+                        <div class="field-group">
+                            <label for="model-name">Model Name</label>
+                            <input
+                                type="text"
+                                id="model-name"
+                                name="modelName"
+                                placeholder="qwen2.5:1.5b"
+                                value="qwen2.5:1.5b"
+                            >
+                        </div>
+                    </div>
+
+                    <div id="local-fields" class="engine-fields" hidden>
+                        <div class="field-group">
+                            <label for="model-path">Selected GGUF Model File Path</label>
+
+                            <div class="file-path-row">
+                                <input
+                                    type="text"
+                                    id="model-path"
+                                    name="localModelPath"
+                                    placeholder="Select or enter model file path"
+                                >
+
+                                <button
+                                    type="button"
+                                    class="secondary-button"
+                                    id="browse-model-btn"
+                                >
+                                    <span aria-hidden="true">📁</span>
+                                    Browse
+                                </button>
+                            </div>
+
+                            <input
+                                type="file"
+                                id="model-file"
+                                accept=".gguf,application/octet-stream"
+                                hidden
+                            >
+
+                            <small class="field-help">
+                                File selection is a UI placeholder.
+                                It does not load or upload the model.
+                            </small>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- NEW: Speech recognition selection -->
+                <section class="settings-card">
+                    <div class="section-heading">
+                        <div class="section-icon">🎙</div>
+                        <div>
+                            <h2>Speech Recognition Configuration</h2>
+                            <p>Choose how XYRO converts your speech into text.</p>
+                        </div>
+                    </div>
+
+                    <div class="field-label">Select Speech Recognition Engine</div>
+
+                    <div class="engine-options">
+
+                        <label class="engine-option selected" for="speech-browser-engine">
+                            <input
+                                type="radio"
+                                id="speech-browser-engine"
+                                name="speechEngine"
+                                value="browser"
+                                checked
+                            >
+
+                            <span class="custom-radio"></span>
+
+                            <span class="engine-option-content">
+                                <strong>1. Browser Speech Recognition</strong>
+                                <small>
+                                    Use the browser's built-in speech recognition
+                                    when supported. It may require an internet
+                                    connection, depending on the browser.
+                                </small>
+                            </span>
+
+                            <span class="option-tag">BROWSER</span>
+                        </label>
+
+                        <label class="engine-option" for="speech-parakeet-engine">
+                            <input
+                                type="radio"
+                                id="speech-parakeet-engine"
+                                name="speechEngine"
+                                value="parakeet"
+                            >
+
+                            <span class="custom-radio"></span>
+
+                            <span class="engine-option-content">
+                                <strong>2. Local Parakeet Speech Recognition</strong>
+                                <small>
+                                    Record audio in the browser and transcribe it
+                                    using the Parakeet model on your XYRO server.
+                                </small>
+                            </span>
+
+                            <span class="option-tag">LOCAL AI</span>
+                        </label>
+
+                    </div>
+
+                    <div class="speech-engine-info">
+                        <p>
+                            <strong>Browser mode:</strong>
+                            Uses the browser's Speech Recognition API if available.
+                        </p>
+
+                        <p>
+                            <strong>Parakeet mode:</strong>
+                            Uses the server's FFmpeg and transcribe.cpp installation.
+                            The recording and transcription integration will be
+                            enabled in the next implementation step.
+                        </p>
+
+                        <div id="speech-engine-status" class="speech-engine-status">
+                            Selected: Browser Speech Recognition
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Response generation -->
+                <section class="settings-card">
+                    <div class="section-heading">
+                        <div class="section-icon">✦</div>
+                        <div>
+                            <h2>Response Generation</h2>
+                            <p>Configure the model's instructions and response style.</p>
+                        </div>
+                    </div>
+
+                    <div class="field-group">
+                        <label for="system-prompt">System Prompt</label>
+
+                        <textarea
+                            id="system-prompt"
+                            name="systemPrompt"
+                            rows="4"
+                            placeholder="Enter instructions for the AI assistant..."
+                        >You are XYRO, a helpful AI assistant for a humanoid robot developed by Yantrigo. Give clear, concise, and useful responses.</textarea>
+
+                        <small class="field-help">
+                            Instructions that guide the AI's responses.
+                        </small>
+                    </div>
+
+                    <div class="temperature-header">
+                        <label for="temperature">Temperature</label>
+                        <span class="temperature-value" id="temperature-value">
+                            0.70
+                        </span>
+                    </div>
+
+                    <input
+                        type="range"
+                        id="temperature"
+                        name="temperature"
+                        min="0"
+                        max="1.5"
+                        step="0.01"
+                        value="0.7"
+                    >
+
+                    <div class="range-labels">
+                        <span>0.00 · More focused</span>
+                        <span>1.50 · More creative</span>
+                    </div>
+                </section>
+
+                <!-- Usage information -->
+                <section class="info-card">
+                    <div class="info-symbol">ⓘ</div>
+
+                    <div>
+                        <h3>How to run a local Qwen model</h3>
+
+                        <p>
+                            <strong>Local model:</strong> Select your
+                            <code>qwen2.5-1.5b-instruct-q4_k_m.gguf</code>
+                            file using Browse.
+                        </p>
+
+                        <p>
+                            <strong>Server mode:</strong> A compatible model
+                            server must be running and accessible at the
+                            configured address.
+                        </p>
+
+                        <pre><code>llama-server -m qwen2.5-1.5b-instruct-q4_k_m.gguf --host 0.0.0.0 --port 8080</code></pre>
+
+                        <small>
+                            Language-model configuration is not yet connected
+                            to the settings backend.
+                        </small>
+                    </div>
+                </section>
+
+                <!-- Password protection -->
+                <section class="settings-card password-card">
+                    <div class="section-heading">
+                        <div class="section-icon">🔒</div>
+                        <div>
+                            <h2>Settings Password Protection</h2>
+                            <p>Manage access to sensitive configuration options.</p>
+                        </div>
+                    </div>
+
+                    <div class="password-row">
+                        <div class="password-status-icon">●</div>
+
+                        <div class="password-details">
+                            <strong>Password Protection</strong>
+                            <span id="password-status" class="status-unprotected">
+                                Status: UNPROTECTED
+                            </span>
+                            <small>
+                                Password protection is not connected to the
+                                current web application yet.
+                            </small>
+                        </div>
+
+                        <button
+                            type="button"
+                            class="secondary-button"
+                            id="password-btn"
+                        >
+                            Set Password
+                        </button>
+                    </div>
+                </section>
+
+                <!-- Action buttons -->
+                <section class="settings-actions">
+                    <button
+                        type="button"
+                        class="reset-button"
+                        id="reset-btn"
+                    >
+                        Reset Defaults
+                    </button>
+
+                    <div class="action-right">
+                        <a href="/" class="cancel-button">Cancel</a>
+
+                        <button type="submit" class="save-button">
+                            Save Settings
+                            <span aria-hidden="true">✓</span>
+                        </button>
+                    </div>
+                </section>
+
+                <div
+                    id="settings-notice"
+                    class="settings-notice"
+                    role="status"
+                    aria-live="polite"
+                    hidden
+                ></div>
+
+            </form>
+        </main>
+
+        <footer class="page-footer">
+            <div class="footer-line"></div>
+            <p>XYRO AI ROBOT <span>•</span> SYSTEM SETTINGS</p>
+            <small>Configuration interface</small>
+        </footer>
+
+    </div>
+</body>
+</html>

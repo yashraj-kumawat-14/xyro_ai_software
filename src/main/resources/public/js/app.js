@@ -12,34 +12,30 @@ document.addEventListener("DOMContentLoaded", () => {
     const responseStatus = document.getElementById("response-status");
     const serverStatus = document.getElementById("server-status");
     const statusIndicator = document.getElementById("status-indicator");
+    const voiceButton = document.getElementById("voice-btn");
 
     let isSending = false;
+    let isListening = false;
+    let isRecording = false;
+    let mediaRecorder = null;
+    let audioChunks = [];
+    let microphoneStream = null;
+    let recognition = null;
 
-    // Check whether the Java server is available.
-    async function checkServer() {
-        try {
-            const response = await fetch("/api/health");
+    const SpeechRecognition =
+        window.SpeechRecognition ||
+        window.webkitSpeechRecognition;
 
-            if (!response.ok) {
-                throw new Error("Server returned HTTP " + response.status);
-            }
-
-            const data = await response.json();
-
-            serverStatus.textContent =
-                "Server status: " + (data.status || "Connected");
-
-            statusIndicator.classList.remove("offline");
-        } catch (error) {
-            serverStatus.textContent = "Server unavailable";
-            statusIndicator.classList.add("offline");
-
-            console.error("Server health check failed:", error);
-        }
+    // Read the selected speech engine from Settings.
+    function getSpeechEngine() {
+        return localStorage.getItem("xyroSpeechEngine") || "browser";
     }
 
-    // Update the orb's appearance and status text.
     function setOrbState(state, message) {
+        if (!orb || !orbStatus) {
+            return;
+        }
+
         orb.classList.remove("listening", "thinking");
 
         if (state === "thinking") {
@@ -51,11 +47,41 @@ document.addEventListener("DOMContentLoaded", () => {
         orbStatus.textContent = message;
     }
 
-    // Send the user's message to the local Java + llama.cpp backend.
+    async function checkServer() {
+        try {
+            const response = await fetch("/api/health");
+
+            if (!response.ok) {
+                throw new Error("Server returned HTTP " + response.status);
+            }
+
+            const data = await response.json();
+
+            if (serverStatus) {
+                serverStatus.textContent =
+                    "Server status: " + (data.status || "Connected");
+            }
+
+            if (statusIndicator) {
+                statusIndicator.classList.remove("offline");
+            }
+        } catch (error) {
+            if (serverStatus) {
+                serverStatus.textContent = "Server unavailable";
+            }
+
+            if (statusIndicator) {
+                statusIndicator.classList.add("offline");
+            }
+
+            console.error("Server health check failed:", error);
+        }
+    }
+
     async function sendMessage() {
         const message = userMessage.value.trim();
 
-        if (!message || isSending) {
+        if (!message || isSending || isListening || isRecording) {
             return;
         }
 
@@ -65,7 +91,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
         llmResponse.value = "";
         responseStatus.textContent = "XYRO is generating a response...";
-
         setOrbState("thinking", "XYRO IS THINKING");
 
         try {
@@ -74,15 +99,10 @@ document.addEventListener("DOMContentLoaded", () => {
                 headers: {
                     "Content-Type": "application/json"
                 },
-                body: JSON.stringify({
-                    message: message
-                })
+                body: JSON.stringify({ message })
             });
 
-            // Read the response as text first so unexpected server errors
-            // can be reported without causing a JSON parsing error.
             const responseText = await response.text();
-
             let data;
 
             try {
@@ -113,8 +133,8 @@ document.addEventListener("DOMContentLoaded", () => {
         } catch (error) {
             console.error("Chat request failed:", error);
 
-            llmResponse.value = "Unable to get a response from XYRO.\n\n" +
-                error.message;
+            llmResponse.value =
+                "Unable to get a response from XYRO.\n\n" + error.message;
 
             responseStatus.textContent = "Request failed";
             setOrbState("ready", "CONNECTION ERROR");
@@ -127,10 +147,9 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    // Send button.
+    // Send button and keyboard input.
     sendButton.addEventListener("click", sendMessage);
 
-    // Enter sends; Shift + Enter inserts a new line.
     userMessage.addEventListener("keydown", (event) => {
         if (event.key === "Enter" && !event.shiftKey) {
             event.preventDefault();
@@ -138,9 +157,9 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 
-    // Keep navigation buttons inactive until their features are implemented.
+    // Navigation.
     document.getElementById("settings-btn").addEventListener("click", () => {
-        console.log("Settings will be implemented later.");
+        window.location.href = "/settings.html";
     });
 
     document.getElementById("manual-btn").addEventListener("click", () => {
@@ -159,30 +178,181 @@ document.addEventListener("DOMContentLoaded", () => {
         console.log("Face registration will be implemented later.");
     });
 
-    // Initial setup.
-    checkServer();
-    userMessage.focus();
+    // Release microphone resources.
+    function releaseMicrophone() {
+        if (microphoneStream) {
+            microphoneStream.getTracks().forEach((track) => track.stop());
+            microphoneStream = null;
+        }
+    }
 
+    // LOCAL PARAKEET SPEECH RECOGNITION
+    async function startParakeetRecording() {
+        if (isSending || isListening || isRecording) {
+            return;
+        }
 
-    // Browser-based speech recognition
-    const voiceButton = document.getElementById("voice-btn");
+        if (!navigator.mediaDevices ||
+            !navigator.mediaDevices.getUserMedia ||
+            !window.MediaRecorder) {
+            responseStatus.textContent =
+                "Audio recording is not supported by this browser.";
+            return;
+        }
 
-    const SpeechRecognition =
-        window.SpeechRecognition ||
-        window.webkitSpeechRecognition;
+        try {
+            microphoneStream = await navigator.mediaDevices.getUserMedia({
+                audio: {
+                    channelCount: 1,
+                    echoCancellation: true,
+                    noiseSuppression: true,
+                    autoGainControl: true
+                }
+            });
 
-    let recognition = null;
-    let isListening = false;
+            audioChunks = [];
 
-    if (!voiceButton) {
-        console.warn("Voice button #voice-btn was not found.");
-    } else if (!SpeechRecognition) {
+            const options = {};
+
+            if (MediaRecorder.isTypeSupported("audio/webm;codecs=opus")) {
+                options.mimeType = "audio/webm;codecs=opus";
+            } else if (MediaRecorder.isTypeSupported("audio/webm")) {
+                options.mimeType = "audio/webm";
+            }
+
+            mediaRecorder = new MediaRecorder(microphoneStream, options);
+
+            mediaRecorder.ondataavailable = (event) => {
+                if (event.data && event.data.size > 0) {
+                    audioChunks.push(event.data);
+                }
+            };
+
+            mediaRecorder.onerror = (event) => {
+                console.error("Audio recording error:", event.error);
+                responseStatus.textContent = "Audio recording failed.";
+            };
+
+            mediaRecorder.onstop = async () => {
+                const audioBlob = new Blob(audioChunks, {
+                    type: mediaRecorder.mimeType || "audio/webm"
+                });
+
+                releaseMicrophone();
+                isRecording = false;
+                updateVoiceButton();
+
+                if (audioBlob.size === 0) {
+                    responseStatus.textContent = "No audio was recorded.";
+                    setOrbState("ready", "XYRO IS READY");
+                    return;
+                }
+
+                await transcribeWithParakeet(audioBlob);
+            };
+
+            mediaRecorder.start();
+
+            isRecording = true;
+            updateVoiceButton();
+
+            setOrbState("listening", "LISTENING...");
+            responseStatus.textContent =
+                "Recording locally with Parakeet. Click the microphone to stop.";
+
+        } catch (error) {
+            console.error("Could not start microphone recording:", error);
+
+            releaseMicrophone();
+            isRecording = false;
+            updateVoiceButton();
+
+            responseStatus.textContent =
+                error.name === "NotAllowedError"
+                    ? "Microphone permission denied. Allow microphone access."
+                    : "Could not access microphone: " + error.message;
+
+            setOrbState("ready", "MICROPHONE ERROR");
+        }
+    }
+
+    function stopParakeetRecording() {
+        if (mediaRecorder && isRecording &&
+            mediaRecorder.state !== "inactive") {
+            responseStatus.textContent = "Preparing audio for transcription...";
+            mediaRecorder.stop();
+        }
+    }
+
+    async function transcribeWithParakeet(audioBlob) {
         voiceButton.disabled = true;
-        voiceButton.title = "Speech recognition is not supported by this browser";
-        voiceButton.setAttribute("aria-label", "Speech recognition unavailable");
+        responseStatus.textContent = "Transcribing with local Parakeet...";
+        setOrbState("thinking", "TRANSCRIBING SPEECH");
 
-        orbStatus.textContent = "VOICE INPUT NOT SUPPORTED";
-    } else {
+        try {
+            const response = await fetch("/api/transcribe", {
+                method: "POST",
+                headers: {
+                    "Content-Type": audioBlob.type || "audio/webm"
+                },
+                body: audioBlob
+            });
+
+            const responseText = await response.text();
+            let data;
+
+            try {
+                data = JSON.parse(responseText);
+            } catch {
+                throw new Error(
+                    "The transcription server returned an invalid response."
+                );
+            }
+
+            if (!response.ok) {
+                throw new Error(
+                    data.error ||
+                    "Transcription failed with HTTP " + response.status
+                );
+            }
+
+            if (typeof data.transcript !== "string" ||
+                !data.transcript.trim()) {
+                throw new Error("Parakeet did not detect any speech.");
+            }
+
+            userMessage.value = data.transcript.trim();
+            userMessage.dispatchEvent(new Event("input", { bubbles: true }));
+
+            responseStatus.textContent =
+                "Speech recognized. Sending to XYRO...";
+
+            // Automatically send the recognized speech to Qwen.
+            await sendMessage();
+
+        } catch (error) {
+            console.error("Parakeet transcription failed:", error);
+
+            responseStatus.textContent =
+                "Transcription failed: " + error.message;
+
+            setOrbState("ready", "TRANSCRIPTION ERROR");
+
+        } finally {
+            voiceButton.disabled = false;
+            updateVoiceButton();
+        }
+    }
+
+    // BROWSER SPEECH RECOGNITION
+    function setupBrowserRecognition() {
+        if (!SpeechRecognition) {
+            responseStatus.textContent =
+                "Browser speech recognition is not supported. " +
+                "Choose Local Parakeet in Settings.";
+            return false;
+        }
+
         recognition = new SpeechRecognition();
 
         recognition.lang = "en-IN";
@@ -190,31 +360,9 @@ document.addEventListener("DOMContentLoaded", () => {
         recognition.interimResults = true;
         recognition.maxAlternatives = 1;
 
-        voiceButton.addEventListener("click", () => {
-            if (isSending) {
-                return;
-            }
-
-            if (isListening) {
-                recognition.stop();
-                return;
-            }
-
-            try {
-                recognition.start();
-            } catch (error) {
-                console.error("Could not start voice recognition:", error);
-                orbStatus.textContent = "VOICE START FAILED";
-            }
-        });
-
         recognition.onstart = () => {
             isListening = true;
-
-            voiceButton.classList.add("listening");
-            voiceButton.textContent = "■";
-            voiceButton.title = "Stop listening";
-            voiceButton.setAttribute("aria-label", "Stop voice input");
+            updateVoiceButton();
 
             setOrbState("listening", "LISTENING...");
             responseStatus.textContent = "Speak now...";
@@ -250,19 +398,19 @@ document.addEventListener("DOMContentLoaded", () => {
         };
 
         recognition.onerror = (event) => {
-            console.error("Speech recognition error:", event.error);
+            console.error("Browser speech recognition error:", event.error);
 
             const messages = {
                 "not-allowed":
-                    "Microphone permission denied. Allow microphone access in your browser.",
+                    "Microphone permission denied. Allow microphone access.",
                 "no-speech":
-                    "No speech detected. Try speaking again.",
+                    "No speech detected. Try again.",
                 "audio-capture":
-                    "No microphone was found. Check your microphone connection.",
+                    "No microphone found. Check your microphone connection.",
                 "network":
-                    "Speech recognition network error. Check your internet connection.",
+                    "Browser recognition network error. Check your connection.",
                 "service-not-allowed":
-                    "The speech recognition service is unavailable or blocked."
+                    "The browser speech recognition service is unavailable."
             };
 
             responseStatus.textContent =
@@ -272,24 +420,84 @@ document.addEventListener("DOMContentLoaded", () => {
 
         recognition.onend = () => {
             isListening = false;
+            updateVoiceButton();
 
-            voiceButton.classList.remove("listening");
-            voiceButton.textContent = "🎙";
-            voiceButton.title = "Speak to XYRO";
-            voiceButton.setAttribute("aria-label", "Start voice input");
-
-            if (userMessage.value.trim() && !isSending) {
-                setOrbState("ready", "VOICE INPUT READY");
-            } else if (!isSending) {
-                setOrbState("ready", "XYRO IS READY");
+            if (!isSending) {
+                setOrbState(
+                    "ready",
+                    userMessage.value.trim()
+                        ? "VOICE INPUT READY"
+                        : "XYRO IS READY"
+                );
             }
 
-            // Automatically send a completed transcription to the LLM.
-            // Remove this block if you prefer to review/edit the text first.
+            // Keep the existing automatic-send behavior.
             if (userMessage.value.trim() && !isSending) {
                 sendMessage();
             }
         };
+
+        return true;
     }
 
+    // Update microphone button appearance.
+    function updateVoiceButton() {
+        if (!voiceButton) {
+            return;
+        }
+
+        if (isRecording || isListening) {
+            voiceButton.classList.add("listening");
+            voiceButton.textContent = "■";
+            voiceButton.title = "Stop listening";
+            voiceButton.setAttribute("aria-label", "Stop voice input");
+        } else {
+            voiceButton.classList.remove("listening");
+            voiceButton.textContent = "🎙";
+            voiceButton.title = "Speak to XYRO";
+            voiceButton.setAttribute("aria-label", "Start voice input");
+        }
+    }
+
+    // Choose the speech engine configured in Settings.
+    if (voiceButton) {
+        voiceButton.addEventListener("click", async () => {
+            if (isSending) {
+                return;
+            }
+
+            const engine = getSpeechEngine();
+
+            if (engine === "parakeet") {
+                if (isRecording) {
+                    stopParakeetRecording();
+                } else {
+                    await startParakeetRecording();
+                }
+
+                return;
+            }
+
+            if (!recognition && !setupBrowserRecognition()) {
+                return;
+            }
+
+            if (isListening) {
+                recognition.stop();
+                return;
+            }
+
+            try {
+                recognition.start();
+            } catch (error) {
+                console.error("Could not start browser recognition:", error);
+                responseStatus.textContent =
+                    "Could not start speech recognition. Try again.";
+            }
+        });
+    }
+
+    checkServer();
+    userMessage.focus();
+    updateVoiceButton();
 });
