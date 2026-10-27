@@ -1,0 +1,1 @@
+/usr/bin/c++ -fPIC -shared -Wl,-soname,libxyro_llama.so -o libxyro_llama.so CMakeFiles/xyro_llama.dir/xyro_llama.cpp.o  -Wl,-rpath,/home/yantrigo/Desktop/projects/llama.cpp/build/bin /home/yantrigo/Desktop/projects/llama.cpp/build/bin/libllama.so 

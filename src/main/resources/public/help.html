@@ -1,0 +1,237 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta name="theme-color" content="#080b14">
+    <meta name="description" content="XYRO AI Robot Help and Support Guide">
+
+    <title>Help & Support | XYRO AI Robot</title>
+
+    <link rel="stylesheet" href="/css/help.css">
+    <script src="/js/help.js" defer></script>
+</head>
+
+<body>
+    <div class="page-container">
+
+        <!-- Header -->
+        <header class="topbar">
+            <a class="brand" href="/" aria-label="Return to XYRO home">
+                <span class="brand-icon">X</span>
+                <span>
+                    <strong>XYRO</strong>
+                    <small>AI ROBOT</small>
+                </span>
+            </a>
+
+            <a class="back-button" href="/">
+                <span aria-hidden="true">←</span>
+                Back to XYRO
+            </a>
+        </header>
+
+        <main>
+            <!-- Page heading -->
+            <section class="page-heading">
+                <div class="eyebrow">
+                    <span class="status-dot"></span>
+                    XYRO SUPPORT CENTER
+                </div>
+
+                <h1>Help &amp; <span>Support</span></h1>
+
+                <p>
+                    Need help with XYRO? Find troubleshooting instructions
+                    and contact the support team below.
+                </p>
+            </section>
+
+            <!-- Support contact -->
+            <section class="support-card">
+                <div class="section-heading">
+                    <div class="section-icon">✉</div>
+                    <div>
+                        <h2>Contact Support</h2>
+                        <p>Get assistance from the I-KIT Labs support team.</p>
+                    </div>
+                </div>
+
+                <div class="contact-list">
+
+                    <a class="contact-item"
+                       href="mailto:help@ikit.in">
+                        <div class="contact-icon">✉</div>
+                        <div class="contact-details">
+                            <span class="contact-label">Support Email</span>
+                            <strong>help@ikit.in</strong>
+                            <small>Send us your questions or technical issues.</small>
+                        </div>
+                        <span class="contact-arrow">↗</span>
+                    </a>
+
+                    <a class="contact-item"
+                       href="tel:+917357446466">
+                        <div class="contact-icon">☎</div>
+                        <div class="contact-details">
+                            <span class="contact-label">Phone / WhatsApp</span>
+                            <strong>+91 7357446466</strong>
+                            <small>Contact the team for support.</small>
+                        </div>
+                        <span class="contact-arrow">↗</span>
+                    </a>
+
+                    <div class="contact-item location-item">
+                        <div class="contact-icon">⌖</div>
+                        <div class="contact-details">
+                            <span class="contact-label">Office / Lab Location</span>
+                            <strong>Padmanabh Innovations LLP</strong>
+                            <small>
+                                I-KIT STEAM LAB, Jaipur, Rajasthan, India
+                            </small>
+                        </div>
+                    </div>
+
+                </div>
+            </section>
+
+            <!-- Troubleshooting -->
+            <section class="support-card troubleshooting-card">
+                <div class="section-heading">
+                    <div class="section-icon">⚙</div>
+                    <div>
+                        <h2>Quick Troubleshooting</h2>
+                        <p>Try these checks when something isn't working.</p>
+                    </div>
+                </div>
+
+                <div class="troubleshooting-list">
+
+                    <details class="troubleshooting-item" open>
+                        <summary>
+                            <span class="issue-number">01</span>
+                            <span>XYRO is not responding</span>
+                            <span class="expand-icon">+</span>
+                        </summary>
+                        <div class="issue-content">
+                            <ul>
+                                <li>Check that the robot or server is powered on.</li>
+                                <li>Check the microphone connection and permissions
+                                    if you are using voice input.</li>
+                                <li>Speak clearly and reduce background noise.</li>
+                                <li>For the current web interface, check the
+                                    server status at the bottom of the home page.</li>
+                            </ul>
+                        </div>
+                    </details>
+
+                    <details class="troubleshooting-item">
+                        <summary>
+                            <span class="issue-number">02</span>
+                            <span>Chat is not generating a response</span>
+                            <span class="expand-icon">+</span>
+                        </summary>
+                        <div class="issue-content">
+                            <ul>
+                                <li>Confirm that the Java server is running.</li>
+                                <li>Check the server status on the XYRO home page.</li>
+                                <li>Verify that the local language model is available
+                                    and loaded correctly.</li>
+                                <li>Check the Java terminal for error messages.</li>
+                                <li>Wait for the current response to finish before
+                                    sending another message.</li>
+                            </ul>
+                        </div>
+                    </details>
+
+                    <details class="troubleshooting-item">
+                        <summary>
+                            <span class="issue-number">03</span>
+                            <span>Server unavailable</span>
+                            <span class="expand-icon">+</span>
+                        </summary>
+                        <div class="issue-content">
+                            <ul>
+                                <li>Make sure the XYRO Java application is running.</li>
+                                <li>Open the home page through the Java server,
+                                    rather than opening the HTML file directly.</li>
+                                <li>Check that the server is listening on
+                                    <code>127.0.0.1:8080</code>.</li>
+                                <li>Review terminal output for startup or native
+                                    library errors.</li>
+                            </ul>
+                        </div>
+                    </details>
+
+                    <details class="troubleshooting-item">
+                        <summary>
+                            <span class="issue-number">04</span>
+                            <span>Face recognition is not working</span>
+                            <span class="expand-icon">+</span>
+                        </summary>
+                        <div class="issue-content">
+                            <ul>
+                                <li>Check the camera connection and permissions.</li>
+                                <li>Ensure the face is clearly visible and well lit.</li>
+                                <li>Keep the face within the camera's field of view.</li>
+                                <li>Confirm that the face recognition service is running.</li>
+                            </ul>
+                            <p class="note">
+                                Face recognition must be implemented and connected
+                                to the current interface before its buttons can work.
+                            </p>
+                        </div>
+                    </details>
+
+                    <details class="troubleshooting-item">
+                        <summary>
+                            <span class="issue-number">05</span>
+                            <span>Voice input or speech output is not working</span>
+                            <span class="expand-icon">+</span>
+                        </summary>
+                        <div class="issue-content">
+                            <ul>
+                                <li>Check microphone permissions and audio connections.</li>
+                                <li>Verify that the selected speech recognition
+                                    engine is installed and running.</li>
+                                <li>Check speaker volume and the selected
+                                    text-to-speech engine.</li>
+                                <li>Test text chat first to determine whether the
+                                    problem is with the AI backend or voice system.</li>
+                            </ul>
+                        </div>
+                    </details>
+
+                </div>
+            </section>
+
+            <!-- Useful information -->
+            <section class="info-card">
+                <div class="info-symbol">ⓘ</div>
+                <div>
+                    <h3>Still need help?</h3>
+                    <p>
+                        When contacting support, include the problem you encountered,
+                        what you were doing, and any error message shown on the screen
+                        or in the Java terminal. Do not share passwords or private keys.
+                    </p>
+
+                    <a class="primary-button" href="mailto:help@ikit.in?subject=XYRO%20AI%20Robot%20Support">
+                        Email Support
+                        <span aria-hidden="true">↗</span>
+                    </a>
+                </div>
+            </section>
+        </main>
+
+        <footer class="page-footer">
+            <div class="footer-line"></div>
+            <p>XYRO AI ROBOT <span>•</span> I-KIT LABS</p>
+            <small>Help &amp; Support Guide</small>
+        </footer>
+
+    </div>
+</body>
+</html>

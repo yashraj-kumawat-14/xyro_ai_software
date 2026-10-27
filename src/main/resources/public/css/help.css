@@ -1,0 +1,553 @@
+
+:root {
+    --bg: #080b14;
+    --panel: #101624;
+    --panel-light: #141d2d;
+    --blue: #58a6ff;
+    --cyan: #5ce1e6;
+    --text: #edf4ff;
+    --muted: #9aa9bf;
+    --border: rgba(130, 160, 200, 0.17);
+    --green: #5ee6a8;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 24px;
+}
+
+body {
+    margin: 0;
+    min-height: 100vh;
+    background:
+        radial-gradient(
+            circle at 50% 0%,
+            rgba(47, 111, 190, 0.13),
+            transparent 40%
+        ),
+        var(--bg);
+    color: var(--text);
+    font-family:
+        -apple-system, BlinkMacSystemFont, "Segoe UI",
+        Roboto, Helvetica, Arial, sans-serif;
+    line-height: 1.6;
+}
+
+a {
+    color: var(--cyan);
+    text-decoration: none;
+}
+
+a:focus-visible,
+summary:focus-visible {
+    outline: 2px solid var(--cyan);
+    outline-offset: 4px;
+}
+
+.page-container {
+    width: min(100% - 36px, 900px);
+    margin: 0 auto;
+}
+
+/* Header */
+
+.topbar {
+    min-height: 78px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    border-bottom: 1px solid var(--border);
+}
+
+.brand {
+    display: flex;
+    align-items: center;
+    gap: 11px;
+    color: var(--text);
+}
+
+.brand-icon {
+    width: 40px;
+    height: 40px;
+    display: grid;
+    place-items: center;
+    border: 1px solid rgba(92, 225, 230, 0.55);
+    border-radius: 12px;
+    color: var(--cyan);
+    background: rgba(92, 225, 230, 0.07);
+    font-size: 23px;
+    font-weight: 800;
+    box-shadow: 0 0 20px rgba(92, 225, 230, 0.08);
+}
+
+.brand strong {
+    display: block;
+    font-size: 16px;
+    letter-spacing: 2px;
+}
+
+.brand small {
+    display: block;
+    margin-top: -4px;
+    color: var(--muted);
+    font-size: 9px;
+    letter-spacing: 2.5px;
+}
+
+.back-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 9px 13px;
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    color: var(--text);
+    background: rgba(255, 255, 255, 0.025);
+    font-size: 12px;
+    transition: border-color 0.2s, background 0.2s;
+}
+
+.back-button:hover {
+    border-color: var(--blue);
+    background: rgba(88, 166, 255, 0.08);
+}
+
+/* Heading */
+
+.page-heading {
+    padding: 46px 0 30px;
+    text-align: center;
+}
+
+.eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--cyan);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 2px;
+}
+
+.status-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--green);
+    box-shadow: 0 0 10px rgba(94, 230, 168, 0.6);
+}
+
+.page-heading h1 {
+    margin: 12px 0 8px;
+    font-size: clamp(30px, 6vw, 43px);
+    line-height: 1.2;
+    letter-spacing: -1.2px;
+}
+
+.page-heading h1 span {
+    color: var(--cyan);
+}
+
+.page-heading > p {
+    max-width: 520px;
+    margin: 0 auto;
+    color: var(--muted);
+    font-size: 14px;
+}
+
+/* Cards */
+
+.support-card {
+    margin-bottom: 20px;
+    padding: 24px;
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    background: linear-gradient(
+        145deg,
+        rgba(20, 29, 45, 0.92),
+        rgba(16, 22, 36, 0.96)
+    );
+    box-shadow: 0 12px 35px rgba(0, 0, 0, 0.12);
+}
+
+.section-heading {
+    display: flex;
+    align-items: center;
+    gap: 13px;
+    margin-bottom: 20px;
+}
+
+.section-icon {
+    flex-shrink: 0;
+    width: 42px;
+    height: 42px;
+    display: grid;
+    place-items: center;
+    border: 1px solid rgba(92, 225, 230, 0.2);
+    border-radius: 12px;
+    color: var(--cyan);
+    background: rgba(92, 225, 230, 0.07);
+    font-size: 21px;
+}
+
+.section-heading h2 {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 650;
+}
+
+.section-heading p {
+    margin: 2px 0 0;
+    color: var(--muted);
+    font-size: 12px;
+}
+
+/* Contact information */
+
+.contact-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.contact-item {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 15px;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.018);
+    transition:
+        border-color 0.2s,
+        background 0.2s,
+        transform 0.2s;
+}
+
+a.contact-item:hover {
+    border-color: rgba(92, 225, 230, 0.45);
+    background: rgba(92, 225, 230, 0.04);
+    transform: translateY(-1px);
+}
+
+.contact-icon {
+    flex-shrink: 0;
+    width: 40px;
+    height: 40px;
+    display: grid;
+    place-items: center;
+    border-radius: 10px;
+    background: rgba(88, 166, 255, 0.09);
+    color: var(--blue);
+    font-size: 20px;
+}
+
+.contact-details {
+    flex: 1;
+    min-width: 0;
+}
+
+.contact-label {
+    display: block;
+    color: var(--muted);
+    font-size: 11px;
+}
+
+.contact-details strong {
+    display: block;
+    margin: 2px 0;
+    color: var(--text);
+    font-size: 14px;
+    overflow-wrap: anywhere;
+}
+
+.contact-details small {
+    display: block;
+    color: var(--muted);
+    font-size: 11px;
+}
+
+.contact-arrow {
+    flex-shrink: 0;
+    color: var(--cyan);
+    font-size: 18px;
+}
+
+.location-item {
+    align-items: flex-start;
+}
+
+.location-item .contact-icon {
+    color: var(--cyan);
+}
+
+/* Troubleshooting accordion */
+
+.troubleshooting-list {
+    display: flex;
+    flex-direction: column;
+    gap: 9px;
+}
+
+.troubleshooting-item {
+    overflow: hidden;
+    border: 1px solid var(--border);
+    border-radius: 11px;
+    background: rgba(255, 255, 255, 0.018);
+    transition: border-color 0.2s;
+}
+
+.troubleshooting-item[open] {
+    border-color: rgba(88, 166, 255, 0.35);
+}
+
+.troubleshooting-item summary {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 15px;
+    cursor: pointer;
+    list-style: none;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.troubleshooting-item summary::-webkit-details-marker {
+    display: none;
+}
+
+.issue-number {
+    flex-shrink: 0;
+    color: var(--cyan);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+}
+
+.expand-icon {
+    margin-left: auto;
+    color: var(--cyan);
+    font-size: 20px;
+    font-weight: 400;
+    transition: transform 0.2s;
+}
+
+.troubleshooting-item[open] .expand-icon {
+    transform: rotate(45deg);
+}
+
+.issue-content {
+    padding: 0 18px 16px 42px;
+    color: var(--muted);
+    font-size: 12px;
+}
+
+.issue-content ul {
+    margin: 0;
+    padding-left: 18px;
+}
+
+.issue-content li {
+    margin: 7px 0;
+    padding-left: 2px;
+}
+
+.issue-content li::marker {
+    color: var(--blue);
+}
+
+.issue-content code {
+    padding: 2px 5px;
+    border: 1px solid var(--border);
+    border-radius: 5px;
+    color: var(--cyan);
+    background: rgba(0, 0, 0, 0.18);
+    font-family: monospace;
+    font-size: 11px;
+}
+
+.note {
+    margin: 12px 0 0;
+    padding: 10px 12px;
+    border-left: 2px solid var(--blue);
+    border-radius: 0 6px 6px 0;
+    background: rgba(88, 166, 255, 0.06);
+    font-size: 11px;
+}
+
+/* Final support panel */
+
+.info-card {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    margin-bottom: 30px;
+    padding: 22px;
+    border: 1px solid rgba(92, 225, 230, 0.25);
+    border-radius: 15px;
+    background: linear-gradient(
+        110deg,
+        rgba(92, 225, 230, 0.06),
+        rgba(88, 166, 255, 0.035)
+    );
+}
+
+.info-symbol {
+    flex-shrink: 0;
+    color: var(--cyan);
+    font-size: 25px;
+}
+
+.info-card h3 {
+    margin: 0 0 5px;
+    font-size: 16px;
+}
+
+.info-card p {
+    margin: 0 0 16px;
+    color: var(--muted);
+    font-size: 12px;
+}
+
+.primary-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 15px;
+    border: 1px solid rgba(92, 225, 230, 0.5);
+    border-radius: 9px;
+    color: #07121c;
+    background: var(--cyan);
+    font-size: 12px;
+    font-weight: 700;
+    transition: filter 0.2s, transform 0.2s;
+}
+
+.primary-button:hover {
+    filter: brightness(1.08);
+    transform: translateY(-1px);
+}
+
+/* Footer */
+
+.page-footer {
+    padding: 0 0 30px;
+    text-align: center;
+}
+
+.footer-line {
+    width: 100%;
+    height: 1px;
+    margin-bottom: 18px;
+    background: var(--border);
+}
+
+.page-footer p {
+    margin: 0;
+    color: var(--text);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 2px;
+}
+
+.page-footer p span {
+    padding: 0 5px;
+    color: var(--cyan);
+}
+
+.page-footer small {
+    color: var(--muted);
+    font-size: 10px;
+}
+
+/* Responsive layout */
+
+@media (max-width: 600px) {
+    .page-container {
+        width: min(100% - 24px, 900px);
+    }
+
+    .topbar {
+        min-height: 68px;
+    }
+
+    .brand-icon {
+        width: 35px;
+        height: 35px;
+        font-size: 20px;
+    }
+
+    .back-button {
+        padding: 8px 10px;
+        font-size: 11px;
+    }
+
+    .page-heading {
+        padding: 35px 0 24px;
+    }
+
+    .page-heading > p {
+        font-size: 13px;
+    }
+
+    .support-card {
+        padding: 17px;
+        border-radius: 13px;
+    }
+
+    .section-heading {
+        gap: 10px;
+    }
+
+    .section-heading h2 {
+        font-size: 16px;
+    }
+
+    .contact-item {
+        gap: 10px;
+        padding: 12px;
+    }
+
+    .contact-icon {
+        width: 35px;
+        height: 35px;
+        font-size: 17px;
+    }
+
+    .contact-details strong {
+        font-size: 12px;
+    }
+
+    .contact-details small {
+        font-size: 10px;
+    }
+
+    .troubleshooting-item summary {
+        gap: 9px;
+        padding: 13px 11px;
+        font-size: 12px;
+    }
+
+    .issue-content {
+        padding: 0 12px 14px 30px;
+    }
+
+    .info-card {
+        padding: 17px;
+        gap: 10px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        scroll-behavior: auto !important;
+        transition: none !important;
+    }
+}

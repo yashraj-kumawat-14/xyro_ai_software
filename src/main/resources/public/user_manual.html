@@ -1,0 +1,333 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>XYRO AI Robot | User Manual</title>
+
+    <link rel="stylesheet" href="/css/user_manual.css">
+    <script src="/js/user_manual.js" defer></script>
+</head>
+
+<body>
+<div class="app">
+
+    <header class="topbar">
+        <div class="brand">
+            <h1>XYRO AI ROBOT</h1>
+            <p>Intelligent Voice Assistant</p>
+        </div>
+
+        <a class="back-button" href="/">
+            <span aria-hidden="true">←</span>
+            Back to XYRO
+        </a>
+    </header>
+
+    <main class="manual">
+
+        <section class="manual-heading">
+            <div class="eyebrow">
+                <span class="status-indicator"></span>
+                DOCUMENTATION
+            </div>
+
+            <h2>User Manual</h2>
+
+            <p class="subtitle">
+                I-KIT LABS · User Guide
+            </p>
+
+            <p class="intro">
+                Learn how to interact with XYRO, configure its AI engine,
+                manage face recognition, and use its available features.
+            </p>
+        </section>
+
+        <nav class="contents card" aria-label="Table of contents">
+            <h3>In this guide</h3>
+
+            <a href="#voice">
+                <span class="nav-number">01</span>
+                Speaking &amp; Wake Word
+                <span class="nav-arrow">↗</span>
+            </a>
+
+            <a href="#settings">
+                <span class="nav-number">02</span>
+                Engine Settings
+                <span class="nav-arrow">↗</span>
+            </a>
+
+            <a href="#faces">
+                <span class="nav-number">03</span>
+                Face Recognition
+                <span class="nav-arrow">↗</span>
+            </a>
+
+            <a href="#ota">
+                <span class="nav-number">04</span>
+                OTA Commands Sync
+                <span class="nav-arrow">↗</span>
+            </a>
+
+            <a href="#llm">
+                <span class="nav-number">05</span>
+                Local Offline LLM
+                <span class="nav-arrow">↗</span>
+            </a>
+        </nav>
+
+        <div class="section-label">FEATURES &amp; INSTRUCTIONS</div>
+
+        <section class="card manual-section" id="voice">
+            <div class="section-heading">
+                <span class="section-icon">◉</span>
+                <div>
+                    <span class="section-number">SECTION 01</span>
+                    <h3>Speaking &amp; Wake Word Activation</h3>
+                </div>
+            </div>
+
+            <p>
+                XYRO can use wake word detection and speech recognition
+                when these features are enabled and configured.
+            </p>
+
+            <ul>
+                <li>
+                    <strong>Wake words:</strong>
+                    The previous configuration uses
+                    <code>David</code> or <code>Xyro</code>.
+                </li>
+                <li>
+                    <strong>How to speak:</strong>
+                    Say the wake word followed by your question, for example,
+                    <em>"Xyro, where is St. Mary School?"</em>
+                </li>
+                <li>
+                    <strong>Recognition variations:</strong>
+                    Phonetic variations such as Zyro, Xero, Zairo, or Syro
+                    may be recognized depending on the speech recognition setup.
+                </li>
+                <li>
+                    <strong>Voice orb:</strong>
+                    The interface displays an animated orb. Its visual states
+                    can be connected to listening, processing, and speaking
+                    when those features are implemented.
+                </li>
+            </ul>
+
+            <div class="info-note">
+                <span class="note-icon">ⓘ</span>
+                <p>
+                    The current web interface supports typed chat. Microphone
+                    input and speech playback require separate implementation.
+                </p>
+            </div>
+        </section>
+
+        <section class="card manual-section" id="settings">
+            <div class="section-heading">
+                <span class="section-icon">⚙</span>
+                <div>
+                    <span class="section-number">SECTION 02</span>
+                    <h3>Engine Settings &amp; Password Lock</h3>
+                </div>
+            </div>
+
+            <p>
+                Use the Settings area to configure the assistant's engines
+                and preferences when those controls are available.
+            </p>
+
+            <ul>
+                <li>
+                    <strong>Password protection:</strong>
+                    The previous application design specified protected
+                    settings and deletion actions. Verify the current
+                    implementation before relying on this protection.
+                </li>
+                <li>
+                    <strong>Speech recognition (STT):</strong>
+                    The previous design included Android System Recognizer
+                    and offline Parakeet GGUF options.
+                </li>
+                <li>
+                    <strong>AI response engine:</strong>
+                    The previous design included a local llama.cpp model
+                    and Google Gemini cloud API.
+                </li>
+                <li>
+                    <strong>Text-to-speech (TTS):</strong>
+                    The previous design included Piper and system voices.
+                </li>
+            </ul>
+
+            <div class="info-note">
+                <span class="note-icon">ⓘ</span>
+                <p>
+                    In the current desktop version, chat uses your local
+                    Qwen model through Java, JNI, and llama.cpp. The Settings
+                    button is not yet functional.
+                </p>
+            </div>
+        </section>
+
+        <section class="card manual-section" id="faces">
+            <div class="section-heading">
+                <span class="section-icon">◎</span>
+                <div>
+                    <span class="section-number">SECTION 03</span>
+                    <h3>Face Recognition</h3>
+                </div>
+            </div>
+
+            <p>
+                The previous design specified InsightFace with the
+                Buffalo_L model and ArcFace face embeddings.
+            </p>
+
+            <ul>
+                <li>
+                    <strong>Register Face:</strong>
+                    Intended for capturing face images and associating
+                    them with a person's name.
+                </li>
+                <li>
+                    <strong>Face Recognize:</strong>
+                    Intended for scanning a face with a camera and matching
+                    it against registered people.
+                </li>
+                <li>
+                    <strong>Saved faces gallery:</strong>
+                    The previous design included a gallery for reviewing
+                    registered face images.
+                </li>
+                <li>
+                    <strong>Deletion controls:</strong>
+                    The previous design specified password protection
+                    for deleting saved faces.
+                </li>
+            </ul>
+
+            <div class="info-note">
+                <span class="note-icon">ⓘ</span>
+                <p>
+                    Face registration, recognition, gallery management,
+                    and deletion protection are not yet connected to the
+                    current desktop web interface.
+                </p>
+            </div>
+        </section>
+
+        <section class="card manual-section" id="ota">
+            <div class="section-heading">
+                <span class="section-icon">↻</span>
+                <div>
+                    <span class="section-number">SECTION 04</span>
+                    <h3>GitHub OTA Commands Sync</h3>
+                </div>
+            </div>
+
+            <p>
+                The previous application design specified synchronizing
+                voice commands from a GitHub-hosted JSON file without
+                requiring a full application package update.
+            </p>
+
+            <ul>
+                <li>
+                    Open Settings when command synchronization is available.
+                </li>
+                <li>
+                    Enter the raw GitHub URL for the relevant
+                    <code>commands.json</code> file.
+                </li>
+                <li>
+                    Use the sync action to retrieve updated commands
+                    and reload them into the application.
+                </li>
+            </ul>
+
+            <div class="info-note">
+                <span class="note-icon">ⓘ</span>
+                <p>
+                    OTA command synchronization is documented from the
+                    previous design and is not yet implemented in the
+                    current desktop interface.
+                </p>
+            </div>
+        </section>
+
+        <section class="card manual-section" id="llm">
+            <div class="section-heading">
+                <span class="section-icon">✧</span>
+                <div>
+                    <span class="section-number">SECTION 05</span>
+                    <h3>Local Offline LLM</h3>
+                </div>
+            </div>
+
+            <p>
+                XYRO's current desktop backend runs a local language model
+                through llama.cpp using a native JNI library.
+            </p>
+
+            <ul>
+                <li>
+                    <strong>Current model:</strong>
+                    Qwen 2.5 1.5B Instruct, Q4_K_M GGUF.
+                </li>
+                <li>
+                    <strong>Inference:</strong>
+                    Java sends the prompt to the native C++ inference
+                    library and receives the generated response.
+                </li>
+                <li>
+                    <strong>Chat endpoint:</strong>
+                    The web interface sends messages to
+                    <code>POST /api/chat</code>.
+                </li>
+                <li>
+                    <strong>Model file:</strong>
+                    The current desktop setup loads the GGUF file from
+                    the configured local model path at server startup.
+                </li>
+                <li>
+                    <strong>Internet access:</strong>
+                    Local model inference itself does not require cloud
+                    inference. Other application features may still
+                    require network access.
+                </li>
+            </ul>
+
+            <div class="info-note">
+                <span class="note-icon">ⓘ</span>
+                <p>
+                    Keep the model file and required native libraries
+                    available on the computer running the Java server.
+                </p>
+            </div>
+        </section>
+
+        <footer class="manual-footer">
+            <div class="footer-orb"></div>
+            <h3>XYRO AI ROBOT</h3>
+            <p>Intelligent robotics · Local AI · Human interaction</p>
+
+            <a href="/" class="back-button footer-button">
+                Return to XYRO <span aria-hidden="true">→</span>
+            </a>
+
+            <div class="copyright">
+                I-KIT LABS · User Manual
+            </div>
+        </footer>
+
+    </main>
+</div>
+</body>
+</html>

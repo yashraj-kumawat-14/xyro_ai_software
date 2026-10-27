@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>XYRO AI Robot</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <script src="/js/app.js" defer></script>
+</head>
+
+<body>
+    <div class="app">
+
+        <header class="topbar">
+            <div class="brand">
+                <h1>XYRO AI ROBOT</h1>
+                <p>Intelligent Voice Assistant</p>
+            </div>
+
+            <nav class="toolbar" aria-label="Main navigation">
+                <button type="button" id="settings-btn">
+                    <span class="icon">⚙</span> Settings
+                </button>
+
+                <button type="button" id="manual-btn">
+                    <span class="icon">▤</span> User Manual
+                </button>
+
+                <button type="button" id="help-btn">
+                    <span class="icon">?</span> Help
+                </button>
+
+                <button type="button" id="recognize-btn">
+                    <span class="icon">◉</span> Face Recognize
+                </button>
+
+                <button type="button" id="register-btn">
+                    <span class="icon">＋</span> Register Face
+                </button>
+            </nav>
+        </header>
+
+        <main class="main-content">
+            <section class="orb-container" aria-label="Voice assistant">
+                <div class="orb" id="voice-orb" role="img" aria-label="XYRO voice orb">
+                    <div class="orb-core"></div>
+                </div>
+
+                <div class="orb-status" id="orb-status">
+                    XYRO IS READY
+                </div>
+
+                <div class="orb-caption">
+                    Your intelligent robotic companion
+                </div>
+            </section>
+        </main>
+
+        <section class="conversation" aria-label="Conversation">
+
+            <div class="message-panel">
+                <label class="panel-heading" for="user-message">
+                    <span class="panel-dot"></span>
+                    YOUR MESSAGE
+                </label>
+
+                <textarea id="user-message" class="message-text" placeholder="Type your message to XYRO..."
+                    aria-label="Your message" rows="3"></textarea>
+
+                <div class="input-actions">
+                    <span class="input-hint">Enter to send · Shift + Enter for a new line</span>
+
+
+                    <button type="button" id="voice-btn" class="voice-button" aria-label="Start voice input"
+                        title="Speak to XYRO">
+                        🎙
+                    </button>
+
+
+                    <button type="button" id="send-btn" class="send-btn">
+                        Send <span aria-hidden="true">➤</span>
+                    </button>
+                </div>
+            </div>
+
+            <div class="message-panel response-panel">
+                <label class="panel-heading" for="llm-response">
+                    <span class="panel-dot"></span>
+                    XYRO RESPONSE
+                </label>
+
+                <textarea id="llm-response" class="message-text" placeholder="XYRO's response will appear here..."
+                    aria-label="XYRO response" rows="3" readonly></textarea>
+
+                <div class="response-footer" id="response-status">
+                    Ready for your message
+                </div>
+            </div>
+
+        </section>
+
+        <footer class="bottom-status">
+            <span class="status-indicator" id="status-indicator"></span>
+            <span id="server-status">Checking server...</span>
+        </footer>
+
+    </div>
+</body>
+
+</html>
